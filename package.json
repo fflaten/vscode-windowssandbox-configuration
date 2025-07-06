@@ -3,15 +3,22 @@
   "displayName": "Windows Sandbox Configuration",
   "description": "Support for authoring configuration files for Windows Sandbox (*.wsb)",
   "version": "0.0.1",
+  "publisher": "fflaten",
+  "license": "MIT",
   "repository": {
+    "type": "git",
     "url": "https://github.com/fflaten/vscode-windowssandbox-configuration"
   },
   "engines": {
     "vscode": "^1.101.0"
   },
+  "packageManager": "pnpm@9.5.0",
   "categories": [
-    "Formatters",
-    "Other"
+    "Programming Languages",
+    "Linters"
+  ],
+  "keywords": [
+    "windows-sandbox"
   ],
   "extensionDependencies": [
     "redhat.vscode-xml"
@@ -23,14 +30,19 @@
   "contributes": {
     "languages": [
       {
-        "id": "windowssandbox",
+        "id": "windows-sandbox",
         "extensions": [
           ".wsb"
         ],
         "aliases": [
           "Windows Sandbox",
-          "WSB"
+          "wsb"
         ]
+      }
+    ],
+    "xmlLanguageParticipants": [
+      {
+        "languageId": "windows-sandbox"
       }
     ]
   },
