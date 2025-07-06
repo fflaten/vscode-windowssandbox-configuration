@@ -20,29 +20,12 @@
       "preLaunchTask": "${defaultBuildTask}",
 			"sourceMaps": true
 		},
-		{
-			"name": "Run Extension (Temp)",
-			"type": "extensionHost",
-			"request": "launch",
-			"runtimeExecutable": "${execPath}",
-			"args": [
-				"--profile-temp",
-				"--extensionDevelopmentPath=${workspaceFolder}",
-				"${workspaceFolder}/examples"
-			],
-			"outFiles": [
-				"${workspaceFolder}/dist/**/*.js"
-			],
-      "preLaunchTask": "${defaultBuildTask}",
-			"sourceMaps": true
-		},
-		{
+    {
 			"name": "Extension Tests",
 			"type": "extensionHost",
 			"request": "launch",
 			"runtimeExecutable": "${execPath}",
-			"args": [
-				"--profile-temp",
+      "args": [
 				"--extensionDevelopmentPath=${workspaceFolder}",
 				"--extensionTestsPath=${workspaceFolder}/out/test"
 			],
