@@ -1,0 +1,9 @@
+{
+  "name": "Windows Sandbox Configuration",
+  "scopeName": "text.xml.wsb",
+  "patterns": [
+    {
+      "include": "text.xml"
+    }
+  ]
+}
