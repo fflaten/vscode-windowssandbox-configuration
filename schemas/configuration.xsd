@@ -25,13 +25,40 @@
 
   <xs:complexType name="MappedFoldersType">
     <xs:annotation>
-      <xs:documentation> An array of folders, each representing a location on the host machine that
-        is shared with the sandbox at the specified path. Folders are mapped before the execution of
-        the Logon command. </xs:documentation>
+      <xs:documentation> An array of folders on the host machine that should be available in the
+        sandbox. Folders are mapped before the execution of the LogonCommand. </xs:documentation>
     </xs:annotation>
     <xs:sequence>
       <xs:element name="MappedFolder" type="MappedFolderType" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="MappedFolderType">
+    <xs:annotation>
+      <xs:documentation> Maps a single folder from the host into the sandbox. </xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element name="HostFolder" type="xs:string">
+        <xs:annotation>
+          <xs:documentation> Absolute or relative path to the folder on the host machine to share
+            into the sandbox. The folder must already exist on the host, or the container fails to
+            start. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SandboxFolder" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation> Absolute path to the destination folder in the sandbox. If the folder
+            doesn't exist, it gets created. If not specified, the folder is mapped to the container
+            user's desktop. Environment variables are supported since Windows 11 23H2. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ReadOnly" type="xs:boolean" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation> If true, enforces read-only access to the shared folder from within the
+            container. Supported values: true/false. Defaults to false. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
   </xs:complexType>
 
   <xs:complexType name="LogonCommandType">
@@ -44,7 +71,8 @@
       <xs:element name="Command" type="xs:string">
         <xs:annotation>
           <xs:documentation> A path to an executable or script inside the container that will be
-            executed after signing in. </xs:documentation>
+            executed after signing in. Environment variables are allowed. Remember to include any
+            external files into the sandbox using MappedFolders. </xs:documentation>
         </xs:annotation>
       </xs:element>
     </xs:sequence>
@@ -77,8 +105,7 @@
       </xs:enumeration>
       <xs:enumeration value="Default">
         <xs:annotation>
-          <xs:documentation> This value is the default value for clipboard redirection. Currently,
-            copy/paste between the host and sandbox are permitted under Default. </xs:documentation>
+          <xs:documentation> Use the default behaviour set in your Windows version. </xs:documentation>
         </xs:annotation>
       </xs:enumeration>
     </xs:restriction>
@@ -102,8 +129,7 @@
       </xs:enumeration>
       <xs:enumeration value="Default">
         <xs:annotation>
-          <xs:documentation> This value is the default value for printer redirection support.
-            Currently, this default value denotes that printer redirection is disabled. </xs:documentation>
+          <xs:documentation> Use the default behaviour set in your Windows version. </xs:documentation>
         </xs:annotation>
       </xs:enumeration>
     </xs:restriction>
@@ -129,8 +155,7 @@
       </xs:enumeration>
       <xs:enumeration value="Default">
         <xs:annotation>
-          <xs:documentation> This value is the default value for Protected Client mode. Currently,
-            this default value denotes that the sandbox doesn't run in Protected Client mode. </xs:documentation>
+          <xs:documentation> Use the default behaviour set in your Windows version. </xs:documentation>
         </xs:annotation>
       </xs:enumeration>
     </xs:restriction>
@@ -154,9 +179,7 @@
       </xs:enumeration>
       <xs:enumeration value="Default">
         <xs:annotation>
-          <xs:documentation> This value is the default value for video input support. Currently,
-            this default value denotes that video input is disabled. Applications that use video
-            input might not function properly in the sandbox. </xs:documentation>
+          <xs:documentation> Use the default behaviour set in your Windows version. </xs:documentation>
         </xs:annotation>
       </xs:enumeration>
     </xs:restriction>
@@ -183,8 +206,7 @@
       </xs:enumeration>
       <xs:enumeration value="Default">
         <xs:annotation>
-          <xs:documentation> This value is the default value for audio input support. Currently,
-            this default value denotes that audio input is enabled. </xs:documentation>
+          <xs:documentation> Use the default behaviour set in your Windows version. </xs:documentation>
         </xs:annotation>
       </xs:enumeration>
     </xs:restriction>
@@ -197,7 +219,8 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="Enable">
         <xs:annotation>
-          <xs:documentation> Enables networking in the sandbox. </xs:documentation>
+          <xs:documentation> Enables networking in the sandbox by creating a virtual switch on the
+            host and connects the sandbox to it via a virtual NIC. </xs:documentation>
         </xs:annotation>
       </xs:enumeration>
       <xs:enumeration value="Disable">
@@ -207,9 +230,7 @@
       </xs:enumeration>
       <xs:enumeration value="Default">
         <xs:annotation>
-          <xs:documentation> This value is the default value for networking support. This value
-            enables networking by creating a virtual switch on the host and connects the sandbox to
-            it via a virtual NIC. </xs:documentation>
+          <xs:documentation> Use the default behaviour set in your Windows version. </xs:documentation>
         </xs:annotation>
       </xs:enumeration>
     </xs:restriction>
@@ -233,37 +254,10 @@
       </xs:enumeration>
       <xs:enumeration value="Default">
         <xs:annotation>
-          <xs:documentation> This value is the default value for vGPU support. Currently, this
-            default value denotes that vGPU is enabled. </xs:documentation>
+          <xs:documentation> Use the default behaviour set in your Windows version. </xs:documentation>
         </xs:annotation>
       </xs:enumeration>
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:complexType name="MappedFolderType">
-    <xs:annotation>
-      <xs:documentation> Maps a single folder from the host into the sandbox. </xs:documentation>
-    </xs:annotation>
-    <xs:all>
-      <xs:element name="HostFolder" type="xs:string">
-        <xs:annotation>
-          <xs:documentation> Specifies the folder on the host machine to share into the sandbox. The
-            folder must already exist on the host, or the container fails to start. </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-      <xs:element name="SandboxFolder" type="xs:string" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation> Specifies the destination in the sandbox to map the folder to. If the
-            folder doesn't exist, it gets created. If not specified, the folder is mapped to the
-            container user's desktop. </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-      <xs:element name="ReadOnly" type="xs:boolean" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation> If true, enforces read-only access to the shared folder from within the
-            container. Supported values: true/false. Defaults to false. </xs:documentation>
-        </xs:annotation>
-      </xs:element>
-    </xs:all>
-  </xs:complexType>
 </xs:schema>
