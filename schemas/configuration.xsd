@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified">
+
+  <xs:element name="Configuration">
+    <xs:annotation>
+      <xs:documentation> Root element for Windows Sandbox configuration. Allows customization of
+        sandbox features such as mapped folders, networking, GPU, and more. </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="MappedFolders" type="MappedFoldersType" minOccurs="0" />
+        <xs:element name="LogonCommand" type="LogonCommandType" minOccurs="0" />
+        <xs:element name="MemoryInMB" type="MemoryInMBType" minOccurs="0" />
+        <xs:element name="ClipboardRedirection" type="ClipboardRedirectionType" minOccurs="0" />
+        <xs:element name="PrinterRedirection" type="PrinterRedirectionType" minOccurs="0" />
+        <xs:element name="ProtectedClient" type="ProtectedClientType" minOccurs="0" />
+        <xs:element name="VideoInput" type="VideoInputType" minOccurs="0" />
+        <xs:element name="AudioInput" type="AudioInputType" minOccurs="0" />
+        <xs:element name="Networking" type="NetworkingType" minOccurs="0" />
+        <xs:element name="vGPU" type="vGPUType" minOccurs="0" />
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="MappedFoldersType">
+    <xs:annotation>
+      <xs:documentation> An array of folders, each representing a location on the host machine that
+        is shared with the sandbox at the specified path. Folders are mapped before the execution of
+        the Logon command. </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="MappedFolder" type="MappedFolderType" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="LogonCommandType">
+    <xs:annotation>
+      <xs:documentation> Specifies a single command that will be invoked automatically after the
+        sandbox logs on. Apps in the sandbox are run under the container user account (should be an
+        administrator). </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Command" type="xs:string">
+        <xs:annotation>
+          <xs:documentation> A path to an executable or script inside the container that will be
+            executed after signing in. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="MemoryInMBType">
+    <xs:annotation>
+      <xs:documentation> Specifies the amount of memory that the sandbox can use in megabytes (MB).
+        If the value is insufficient to boot a sandbox, it's automatically increased to the required
+        minimum (2048 MB). </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:positiveInteger" />
+  </xs:simpleType>
+
+  <xs:simpleType name="ClipboardRedirectionType">
+    <xs:annotation>
+      <xs:documentation> Enables or disables sharing of the host clipboard with the sandbox. </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Enable">
+        <xs:annotation>
+          <xs:documentation> Enables sharing of the host clipboard with the sandbox. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Disable">
+        <xs:annotation>
+          <xs:documentation> Disables clipboard redirection in the sandbox. If this value is set,
+            copy/paste in and out of the sandbox is restricted. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Default">
+        <xs:annotation>
+          <xs:documentation> This value is the default value for clipboard redirection. Currently,
+            copy/paste between the host and sandbox are permitted under Default. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PrinterRedirectionType">
+    <xs:annotation>
+      <xs:documentation> Enables or disables printer sharing from the host into the sandbox. </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Enable">
+        <xs:annotation>
+          <xs:documentation> Enables sharing of host printers into the sandbox. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Disable">
+        <xs:annotation>
+          <xs:documentation> Disables printer redirection in the sandbox. If this value is set, the
+            sandbox can't view printers from the host. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Default">
+        <xs:annotation>
+          <xs:documentation> This value is the default value for printer redirection support.
+            Currently, this default value denotes that printer redirection is disabled. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ProtectedClientType">
+    <xs:annotation>
+      <xs:documentation> When Protected Client mode is enabled, Sandbox adds a new layer of security
+        boundary by running inside an AppContainer Isolation execution environment. </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Enable">
+        <xs:annotation>
+          <xs:documentation> Runs Windows sandbox in Protected Client mode. If this value is set,
+            the Sandbox runs in AppContainer Isolation. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Disable">
+        <xs:annotation>
+          <xs:documentation> Runs the Sandbox in the standard mode without extra security
+            mitigations. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Default">
+        <xs:annotation>
+          <xs:documentation> This value is the default value for Protected Client mode. Currently,
+            this default value denotes that the sandbox doesn't run in Protected Client mode. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="VideoInputType">
+    <xs:annotation>
+      <xs:documentation> Enables or disables video input to the sandbox. </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Enable">
+        <xs:annotation>
+          <xs:documentation> Enables video input in the sandbox. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Disable">
+        <xs:annotation>
+          <xs:documentation> Disables video input in the sandbox. Applications that use video input
+            might not function properly in the sandbox. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Default">
+        <xs:annotation>
+          <xs:documentation> This value is the default value for video input support. Currently,
+            this default value denotes that video input is disabled. Applications that use video
+            input might not function properly in the sandbox. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="AudioInputType">
+    <xs:annotation>
+      <xs:documentation> Enables or disables audio input to the sandbox. </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Enable">
+        <xs:annotation>
+          <xs:documentation> Enables audio input in the sandbox. If this value is set, the sandbox
+            can receive audio input from the user. Applications that use a microphone might require
+            this capability. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Disable">
+        <xs:annotation>
+          <xs:documentation> Disables audio input in the sandbox. If this value is set, the sandbox
+            can't receive audio input from the user. Applications that use a microphone might not
+            function properly with this setting. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Default">
+        <xs:annotation>
+          <xs:documentation> This value is the default value for audio input support. Currently,
+            this default value denotes that audio input is enabled. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="NetworkingType">
+    <xs:annotation>
+      <xs:documentation> Enables or disables networking in the sandbox. </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Enable">
+        <xs:annotation>
+          <xs:documentation> Enables networking in the sandbox. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Disable">
+        <xs:annotation>
+          <xs:documentation> Disables networking in the sandbox. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Default">
+        <xs:annotation>
+          <xs:documentation> This value is the default value for networking support. This value
+            enables networking by creating a virtual switch on the host and connects the sandbox to
+            it via a virtual NIC. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="vGPUType">
+    <xs:annotation>
+      <xs:documentation> Enables or disables GPU sharing (virtualized GPU). </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Enable">
+        <xs:annotation>
+          <xs:documentation> Enables vGPU support in the sandbox. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Disable">
+        <xs:annotation>
+          <xs:documentation> Disables vGPU support in the sandbox. If this value is set, the sandbox
+            uses software rendering, which might be slower than virtualized GPU. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Default">
+        <xs:annotation>
+          <xs:documentation> This value is the default value for vGPU support. Currently, this
+            default value denotes that vGPU is enabled. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="MappedFolderType">
+    <xs:annotation>
+      <xs:documentation> Maps a single folder from the host into the sandbox. </xs:documentation>
+    </xs:annotation>
+    <xs:all>
+      <xs:element name="HostFolder" type="xs:string">
+        <xs:annotation>
+          <xs:documentation> Specifies the folder on the host machine to share into the sandbox. The
+            folder must already exist on the host, or the container fails to start. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SandboxFolder" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation> Specifies the destination in the sandbox to map the folder to. If the
+            folder doesn't exist, it gets created. If not specified, the folder is mapped to the
+            container user's desktop. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ReadOnly" type="xs:boolean" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation> If true, enforces read-only access to the shared folder from within the
+            container. Supported values: true/false. Defaults to false. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+</xs:schema>

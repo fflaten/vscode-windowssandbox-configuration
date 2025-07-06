@@ -1,0 +1,31 @@
+<Configuration>
+    <AudioInput>Enable</AudioInput>
+    <MappedFolders>
+        <MappedFolder>
+            <HostFolder>C:\Users\thoma\Code\Repos\Scripts\Windows Sandbox\WindowsSandboxScripts</HostFolder>
+            <!-- If SandboxFolder is undefined, the desktop folders is used-->
+            <!--<SandboxFolder>absolute
+            path to the sandbox folder</SandboxFolder>-->
+            <ReadOnly>true</ReadOnly>
+            <SandboxFolder></SandboxFolder>
+        </MappedFolder>
+        <MappedFolder>
+            <HostFolder>C:\Users\thoma\Code\Repos\Scripts\Windows Sandbox\WindowsSandboxScripts</HostFolder>
+            <!-- If SandboxFolder is undefined, the desktop folders is used-->
+            <!--<SandboxFolder>absolute
+            path to the sandbox folder</SandboxFolder>-->
+            <ReadOnly>true</ReadOnly>
+            <SandboxFolder></SandboxFolder>
+        </MappedFolder>
+    </MappedFolders>
+    <LogonCommand>
+        <Command>C:\users\wdagutilityaccount\desktop\WindowsSandboxScripts\InstallVSCode.cmd</Command>
+    </LogonCommand>
+    <MemoryInMB>2048</MemoryInMB>
+    <ClipboardRedirection>Enable</ClipboardRedirection>
+    <PrinterRedirection>Enable</PrinterRedirection>
+    <ProtectedClient>Enable</ProtectedClient>
+    <VideoInput>Enable</VideoInput>
+    <Networking>Enable</Networking>
+    <vGPU>Enable</vGPU>
+</Configuration>
