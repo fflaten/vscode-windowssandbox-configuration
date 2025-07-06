@@ -7,6 +7,8 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
+        "dbaeumer.vscode-eslint",
+        "connor4312.esbuild-problem-matchers",
 				"redhat.vscode-xml",
 				"EditorConfig.EditorConfig"
 			]
