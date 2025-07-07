@@ -10,6 +10,7 @@
     "type": "git",
     "url": "https://github.com/fflaten/vscode-windowssandbox-configuration"
   },
+  "icon": "images/icon.png",
   "sponsor": {
     "url": "https://github.com/sponsors/fflaten"
   },
