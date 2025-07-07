@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.0.4] - 2025-07-07
+
+- Updated icon
+
 ## [0.0.3] - 2025-07-07
 
 - Added icon
