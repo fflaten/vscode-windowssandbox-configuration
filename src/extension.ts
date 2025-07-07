@@ -8,7 +8,7 @@ export async function activate(context: vscode.ExtensionContext) {
     xmlExtension.addXMLFileAssociations([
       {
         pattern: "**/*.wsb",
-        systemId: context.asAbsolutePath("schemas/configuration.xsd")
+        systemId: context.asAbsolutePath("schemas/wsb.xsd")
       }
     ]);
   }

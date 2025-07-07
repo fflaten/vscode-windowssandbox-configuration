@@ -34,24 +34,23 @@
   "contributes": {
     "languages": [
       {
-        "id": "windows-sandbox",
+        "id": "wsb",
         "extensions": [
           ".wsb"
         ],
         "aliases": [
-          "Windows Sandbox",
-          "wsb"
+          "Windows Sandbox"
         ]
       }
     ],
     "xmlLanguageParticipants": [
       {
-        "languageId": "windows-sandbox"
+        "languageId": "wsb"
       }
     ],
     "grammars": [
       {
-        "language": "windows-sandbox",
+        "language": "wsb",
         "scopeName": "text.xml.wsb",
         "path": "./syntaxes/wsb.tmLanguage.json",
         "embeddedLanguages": {
