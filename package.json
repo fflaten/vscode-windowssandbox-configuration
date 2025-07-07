@@ -2,7 +2,7 @@
   "name": "windowssandbox-configuration",
   "displayName": "Windows Sandbox Configuration",
   "description": "Support for authoring configuration files for Windows Sandbox (*.wsb)",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "preview": true,
   "publisher": "fflaten",
   "license": "MIT",
