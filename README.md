@@ -2,7 +2,7 @@
 
 Visual Studio Code extension for authoring *.wsb configuration files for Windows Sandbox.
 
-![extension preview image showing code completion and documentated options](images/preview.png)
+![Preview of extension](images/preview.png)
 
 ## Features
 
