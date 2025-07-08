@@ -1,0 +1,99 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      publishMS:
+        description: "Publish to the Visual Studio Marketplace"
+        type: boolean
+        required: true
+        default: true
+      publishOVSX:
+        description: "Publish to Open VSX"
+        type: boolean
+        required: true
+        default: true
+      publishGH:
+        description: "Publish to GitHub Releases"
+        type: boolean
+        required: true
+        default: true
+
+jobs:
+  package:
+    name: Package
+    runs-on: ubuntu-latest
+    outputs:
+      packageName: ${{ steps.setup.outputs.packageName }}
+      tag: ${{ steps.setup.outputs.tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node and Restore NPM Cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm i
+
+      - name: Setup variables
+        id: setup
+        shell: pwsh
+        run: |
+          $json = Get-Content ./package.json -Raw | ConvertFrom-Json
+          $name = $json.name
+          $version = $json.version
+          $tag = "v$version"
+          Write-Host "tag: $tag"
+          Write-Host "::set-output name=tag::$tag"
+          Write-Host "::set-output name=packageName::$name-$version.vsix"
+
+      - name: Package
+        run: |
+          pnpm package --out ${{ steps.setup.outputs.packageName }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.setup.outputs.packageName }}
+          path: ./${{ steps.setup.outputs.packageName }}
+          if-no-files-found: error
+
+  publishMS:
+    name: Publish to VS Marketplace
+    runs-on: ubuntu-latest
+    needs: package
+    if: github.event.inputs.publishMS == 'true'
+    steps:
+      - uses: actions/download-artifact@v4
+      - name: Publish to VS Marketplace
+        run: npx vsce publish --packagePath ./${{ needs.package.outputs.packageName }} --pat ${{ secrets.VSCE_PAT }}
+
+  publishOVSX:
+    name: Publish to Open VSX
+    runs-on: ubuntu-latest
+    needs: package
+    if: github.event.inputs.publishOVSX == 'true'
+    steps:
+      - uses: actions/download-artifact@v
+      - name: Publish to Open VSX
+        run: npx ovsx publish --packagePath ./${{ needs.package.outputs.packageName }} --pat ${{ secrets.OVSX_PAT }}
+
+  publishGH:
+    name: Publish to GitHub releases
+    runs-on: ubuntu-latest
+    needs: package
+    if: github.event.inputs.publishGH == 'true'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8 # v2.3.2
+        with:
+          tag_name: ${{ needs.package.outputs.tag }}
+          files: ${{ needs.package.outputs.packageName }}
+          draft: false
+          prerelease: false
