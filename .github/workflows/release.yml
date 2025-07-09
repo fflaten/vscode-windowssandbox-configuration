@@ -50,14 +50,14 @@ jobs:
         shell: pwsh
         run: |
           $json = Get-Content ./package.json -Raw | ConvertFrom-Json
-          $name = $json.name
-          $version = $json.version
-          $tag = "v$version"
-          Write-Host "tag: $tag"
-          Write-Host "::set-output name=tag::$tag"
-          Write-Host "::set-output name=packageName::$name-$version.vsix"
+          $tag = 'v{0}' -f $json.version
+          $packageName = '{0}-{1}.vsix' -f $json.name, $json.version
+          Write-Host "Tag: $tag"
+          Write-Host "Package Name: $packageName"
+          "tag=$tag" >> $GITHUB_OUTPUT
+          "packageName=$packageName" >> $GITHUB_OUTPUT
 
-      - name: Package
+      - name: Package VSIX
         run: |
           pnpm package --out ${{ steps.setup.outputs.packageName }}
 
