@@ -19,6 +19,9 @@ on:
         required: true
         default: true
 
+permissions:
+  contents: read
+
 jobs:
   package:
     name: Package
@@ -30,7 +33,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node and Restore NPM Cache
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Install Node and restore cache
         uses: actions/setup-node@v4
         with:
           node-version: 22
