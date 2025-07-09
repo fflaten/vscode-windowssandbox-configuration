@@ -74,6 +74,8 @@ jobs:
     if: github.event.inputs.publishMS == 'true'
     steps:
       - uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.package.outputs.packageName }}
       - name: Publish to VS Marketplace
         run: npx vsce publish --packagePath ./${{ needs.package.outputs.packageName }} --pat ${{ secrets.VSCE_PAT }}
 
@@ -83,7 +85,9 @@ jobs:
     needs: package
     if: github.event.inputs.publishOVSX == 'true'
     steps:
-      - uses: actions/download-artifact@v
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.package.outputs.packageName }}
       - name: Publish to Open VSX
         run: npx ovsx publish --packagePath ./${{ needs.package.outputs.packageName }} --pat ${{ secrets.OVSX_PAT }}
 
@@ -96,6 +100,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.package.outputs.packageName }}
       - name: Create GitHub Release
         uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8 # v2.3.2
         with:
