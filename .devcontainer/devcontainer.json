@@ -11,7 +11,8 @@
         "connor4312.esbuild-problem-matchers",
         "ms-vscode.extension-test-runner",
 				"redhat.vscode-xml",
-				"EditorConfig.EditorConfig"
+        "EditorConfig.EditorConfig",
+        "github.vscode-github-actions"
 			]
 		}
 	}
