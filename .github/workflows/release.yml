@@ -87,7 +87,7 @@ jobs:
           allow-no-subscriptions: true
           enable-AzPSSession: true
       - name: Publish to VS Marketplace
-        run: npx vsce publish --packagePath ./${{ needs.package.outputs.packageName }} --azure-credential
+        run: npx @vscode/vsce publish --packagePath ./${{ needs.package.outputs.packageName }} --azure-credential
 
   publishOVSX:
     name: Publish to Open VSX
