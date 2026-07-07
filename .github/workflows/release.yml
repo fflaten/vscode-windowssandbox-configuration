@@ -54,8 +54,8 @@ jobs:
           $packageName = '{0}-{1}.vsix' -f $json.name, $json.version
           Write-Host "Tag: $tag"
           Write-Host "Package Name: $packageName"
-          "tag=$tag" >> "$GITHUB_OUTPUT"
-          "packageName=$packageName" >> "$GITHUB_OUTPUT"
+          "tag=$tag" >> $env:GITHUB_OUTPUT
+          "packageName=$packageName" >> $env:GITHUB_OUTPUT
 
       - name: Package VSIX
         run: |
