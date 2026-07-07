@@ -76,8 +76,15 @@ jobs:
       - uses: actions/download-artifact@v8
         with:
           name: ${{ needs.package.outputs.packageName }}
+      - name: Azure Login
+        uses: Azure/login@v3
+        with:
+          client-id: ${{ secrets.AZ_CLIENTID }}
+          tenant-id: ${{ secrets.AZ_TENANTID }}
+          allow-no-subscriptions: true
+          enable-AzPSSession: true
       - name: Publish to VS Marketplace
-        run: npx vsce publish --packagePath ./${{ needs.package.outputs.packageName }} --pat ${{ secrets.VSCE_PAT }}
+        run: npx vsce publish --packagePath ./${{ needs.package.outputs.packageName }} --azure-credential
 
   publishOVSX:
     name: Publish to Open VSX
